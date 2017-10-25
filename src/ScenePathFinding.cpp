@@ -320,3 +320,27 @@ bool ScenePathFinding::isValidCell(Vector2D cell)
 		return false;
 	return !(terrain[(unsigned int)cell.x][(unsigned int)cell.y] == 0);
 }
+
+/*
+
+Crear graph:
+Recorrer el terreny sencer (Dos for) i anar comprovant si la casella == 1. Si ho es, el que farem es
+Indicar la seva posició com a node origen a la class Aresta. Seguit comprovar els seus 4 veïns i si
+depenent si són == 1 o == o, s'afageix una aresta amb el node comprovat. Una vegada comprovats els
+4 veïns, seguim recorrent l'array.
+
+No passa res si hi ha arestes diferents de doble sentit, es "útil".
+D'aquesta manera cream un graph que conté cada cel·la de terren, que no sigui == 0.
+
+*/
+
+/*
+
+Crearem la classe Graph, i també la classe aresta
+Aresta contendra un Vector amb el node origen i node final de cada aresta, també tenir en compte el pes
+del camí. Despres els pertinents setters i getters.
+
+Graph pot ser inclús un Struct, que contengui una array o vector d'arestes. Tot i que inclús podríem
+no crear ni la classe graph i sobreviure amb un vector<Aresta> i que guardi totes
+
+*/
