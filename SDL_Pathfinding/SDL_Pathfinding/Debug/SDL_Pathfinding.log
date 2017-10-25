@@ -1,0 +1,10 @@
+﻿  utils.cpp
+  SteeringBehavior.cpp
+  SDL_SimpleApp.cpp
+  ScenePathFinding.cpp
+  main.cpp
+  Agent.cpp
+  Generando código...
+  LINK : no se encontró C:\Users\Miquel\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
+  SDL_Pathfinding.vcxproj -> C:\Users\Miquel\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.exe
+  SDL_Pathfinding.vcxproj -> C:\Users\Miquel\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.pdb (Partial PDB)
