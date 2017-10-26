@@ -33,6 +33,8 @@ ScenePathFinding::ScenePathFinding()
 	currentTarget = Vector2D(0, 0);
 	currentTargetIndex = -1;
 
+
+
 }
 
 ScenePathFinding::~ScenePathFinding()
@@ -273,6 +275,37 @@ void ScenePathFinding::initMaze()
 				}  
 			}
 			
+		}
+	}
+
+	// Recorrer tot el terreny i crear graph
+	for (int i = 0; i < num_cell_x; i++)
+	{
+		for (int j = 0; j < num_cell_y; j++)
+		{
+			if (terrain[i][j] != 0) {
+				//Right
+				if ((i < (int)terrain.size() - 1) && terrain[i + 1][j] != 0) {
+					Connection tempCon(terrain[i][j], terrain[i + 1][j], 1);
+					terrainGraph.setConnection(tempCon);
+				}
+				//Bottom
+				if ((j < (int)terrain[0].size() - 1) && terrain[i][j + 1] != 0) {
+					Connection tempCon(terrain[i][j], terrain[i][j + 1], 1);
+					terrainGraph.setConnection(tempCon);
+				}
+				//Left
+				if ((i > 0) && terrain[i - 1][j] != 0) {
+					Connection tempCon(terrain[i][j], terrain[i - 1][j], 1);
+					terrainGraph.setConnection(tempCon);
+				}
+				// Top
+				if ((j > 0) && terrain[i][j - 1] != 0) {
+					Connection tempCon(terrain[i][j], terrain[i][j - 1], 1);
+					terrainGraph.setConnection(tempCon);
+				}
+
+			}
 		}
 	}
 

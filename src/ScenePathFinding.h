@@ -4,6 +4,8 @@
 #include "Scene.h"
 #include "Agent.h"
 #include "Path.h"
+#include "Graph.h"
+#include "Connection.h"
 
 class ScenePathFinding :
 	public Scene
@@ -14,6 +16,8 @@ public:
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	const char* getTitle();
+	// Create graph
+	Graph terrainGraph;
 private:
 	std::vector<Agent*> agents;
 	Vector2D coinPosition;
