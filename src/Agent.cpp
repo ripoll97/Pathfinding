@@ -156,3 +156,12 @@ bool Agent::loadSpriteTexture(char* filename, int _num_frames)
 
 	return true;
 }
+
+Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
+{
+	Path tempPath;
+	queue<Vector2D> frontier;
+	frontier.push(inicialNode);
+	vector<Vector2D> came_from;
+	//came_from[inicialNode] = NULL;
+}

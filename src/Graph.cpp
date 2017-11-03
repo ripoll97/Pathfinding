@@ -7,6 +7,7 @@ Graph::~Graph() {};
 void Graph::setConnection(Connection conex) {
 	terrainGraph.push_back(conex);
 }
+
 vector<Connection> Graph::GetConnections(Vector2D fromNode) {
 	vector<Connection> nextConnections;
 	for (int i = 0; i < terrainGraph.size(); i++) {
@@ -15,4 +16,8 @@ vector<Connection> Graph::GetConnections(Vector2D fromNode) {
 		}
 	}
 	return nextConnections;
+}
+
+int Graph::getSize() {
+	return terrainGraph.size();
 }

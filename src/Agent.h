@@ -7,6 +7,8 @@
 #include "Vector2D.h"
 #include "utils.h"
 #include "SteeringBehavior.h"
+#include "Path.h"
+#include "Graph.h"
 
 
 class Agent
@@ -48,5 +50,6 @@ public:
 	void update(Vector2D steering_force, float dtime, SDL_Event *event);
 	void draw();
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);
-	
+	//Pathfinding (Graph, node inici i node final, enum quin algoritme)
+	Path PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode);
 };

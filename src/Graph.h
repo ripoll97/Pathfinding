@@ -4,13 +4,13 @@
 #include "Vector2D.h"
 
 class Graph {
-private:
-	vector<Connection> terrainGraph;
 public:
+	vector<Connection> terrainGraph;
 
 	Graph();
 	~Graph();
 
 	void setConnection(Connection conex);
 	vector<Connection> GetConnections(Vector2D fromNode);
+	int getSize();
 };

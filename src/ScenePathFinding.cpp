@@ -65,11 +65,12 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 			Vector2D cell = pix2cell(Vector2D((float)(event->button.x), (float)(event->button.y)));
 			if (isValidCell(cell))
 			{
-				if (path.points.size() > 0)
+				/*if (path.points.size() > 0)
 					if (path.points[path.points.size() - 1] == cell2pix(cell))
 						break;
 
-				path.points.push_back(cell2pix(cell));
+				path.points.push_back(cell2pix(cell));*/
+				path = agents[0]->PathFinding(terrainGraph, agents[0]->getPosition(), Vector2D(1,2));
 			}
 		}
 		break;
@@ -123,7 +124,7 @@ void ScenePathFinding::draw()
 {
 	drawMaze();
 	drawCoin();
-
+	drawGraph();
 
 	if (draw_grid)
 	{
@@ -176,6 +177,18 @@ void ScenePathFinding::drawCoin()
 	int offset = CELL_SIZE / 2;
 	SDL_Rect dstrect = {(int)coin_coords.x-offset, (int)coin_coords.y - offset, CELL_SIZE, CELL_SIZE};
 	SDL_RenderCopy(TheApp::Instance()->getRenderer(), coin_texture, NULL, &dstrect);
+}
+
+void ScenePathFinding::drawGraph()
+{
+	for (int i = 0; i < terrainGraph.getSize(); i++) {
+		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 200, 100, 200, 127);
+		SDL_RenderDrawLine(TheApp::Instance()->getRenderer(),
+			cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).x,
+			cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).y,
+			cell2pix(terrainGraph.terrainGraph[i].GetToNode()).x,
+			cell2pix(terrainGraph.terrainGraph[i].GetToNode()).y);
+	}
 }
 
 void ScenePathFinding::initMaze()
@@ -286,28 +299,30 @@ void ScenePathFinding::initMaze()
 			if (terrain[i][j] != 0) {
 				//Right
 				if ((i < (int)terrain.size() - 1) && terrain[i + 1][j] != 0) {
-					Connection tempCon(terrain[i][j], terrain[i + 1][j], 1);
+					Connection tempCon(Vector2D(i,j), Vector2D(i+1, j), 1);
 					terrainGraph.setConnection(tempCon);
+
 				}
 				//Bottom
 				if ((j < (int)terrain[0].size() - 1) && terrain[i][j + 1] != 0) {
-					Connection tempCon(terrain[i][j], terrain[i][j + 1], 1);
+					Connection tempCon(Vector2D(i, j), Vector2D(i, j + 1), 1);
 					terrainGraph.setConnection(tempCon);
 				}
 				//Left
 				if ((i > 0) && terrain[i - 1][j] != 0) {
-					Connection tempCon(terrain[i][j], terrain[i - 1][j], 1);
+					Connection tempCon(Vector2D(i, j), Vector2D(i - 1, j), 1);
 					terrainGraph.setConnection(tempCon);
 				}
 				// Top
 				if ((j > 0) && terrain[i][j - 1] != 0) {
-					Connection tempCon(terrain[i][j], terrain[i][j - 1], 1);
+					Connection tempCon(Vector2D(i, j), Vector2D(i, j - 1), 1);
 					terrainGraph.setConnection(tempCon);
 				}
 
 			}
 		}
 	}
+	
 
 }
 

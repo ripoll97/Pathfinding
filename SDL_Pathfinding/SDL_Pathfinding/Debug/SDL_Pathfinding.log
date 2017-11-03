@@ -1,2 +1,14 @@
-﻿  SDL_Pathfinding.vcxproj -> C:\Users\mripoll\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.exe
+﻿  ScenePathFinding.cpp
+c:\users\mripoll\documents\github\pathfinding\src\scenepathfinding.cpp(190): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\mripoll\documents\github\pathfinding\src\scenepathfinding.cpp(302): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\mripoll\documents\github\pathfinding\src\scenepathfinding.cpp(308): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\mripoll\documents\github\pathfinding\src\scenepathfinding.cpp(313): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\mripoll\documents\github\pathfinding\src\scenepathfinding.cpp(318): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Agent.cpp
+  Generating Code...
+  Compiling...
+  main.cpp
+  SteeringBehavior.cpp
+  Generating Code...
+  SDL_Pathfinding.vcxproj -> C:\Users\mripoll\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.exe
   SDL_Pathfinding.vcxproj -> C:\Users\mripoll\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.pdb (Partial PDB)

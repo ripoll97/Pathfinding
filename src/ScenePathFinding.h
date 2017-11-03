@@ -39,4 +39,5 @@ private:
 	Vector2D pix2cell(Vector2D pix);
 	bool isValidCell(Vector2D cell);
 
+	void drawGraph();
 };
