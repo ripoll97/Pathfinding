@@ -14,7 +14,7 @@ public:
 	Connection(Vector2D from, Vector2D to, int costInt);
 	~Connection();
 
-	float GetCost();
+	int GetCost();
 	Vector2D GetFromNode();
 	Vector2D GetToNode();
 };

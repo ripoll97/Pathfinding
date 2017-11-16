@@ -70,7 +70,8 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 						break;
 
 				path.points.push_back(cell2pix(cell));*/
-				path = agents[0]->PathFinding(terrainGraph, agents[0]->getPosition(), Vector2D(1,2));
+
+				path = agents[0]->PathFinding(terrainGraph, pix2cell(agents[0]->getPosition()), cell);
 			}
 		}
 		break;

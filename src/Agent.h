@@ -9,6 +9,9 @@
 #include "SteeringBehavior.h"
 #include "Path.h"
 #include "Graph.h"
+#include <queue>
+#include <map>
+#include <unordered_map>
 
 
 class Agent
@@ -52,4 +55,12 @@ public:
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);
 	//Pathfinding (Graph, node inici i node final, enum quin algoritme)
 	Path PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode);
+
+
+	Vector2D cell2pix(Vector2D cell)
+	{
+		int offset = CELL_SIZE / 2;
+		return Vector2D(cell.x*CELL_SIZE + offset, cell.y*CELL_SIZE + offset);
+	}
+
 };

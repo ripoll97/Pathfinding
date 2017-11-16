@@ -7,7 +7,7 @@ Connection::Connection(Vector2D from, Vector2D to, int costInt) {
 }
 Connection::~Connection() {}
 
-float Connection::GetCost() {
+int Connection::GetCost() {
 	return cost;
 }
 

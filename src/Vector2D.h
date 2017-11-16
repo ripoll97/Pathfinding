@@ -141,7 +141,40 @@ struct Vector2D
 		Vector2D v = start - end;
 		return v.LengthSquared();
 	}
+	inline bool operator<(Vector2D &toCompare)
+	{
+		float val1 = x + y*0.001;
+		float val2 = toCompare.x + toCompare.y*0.0001;
+		return val1 < val2;
+	}	
+	inline bool operator<=(Vector2D &toCompare)
+	{
+		return (x*x + y*y) == (toCompare.x*toCompare.x + toCompare.y*toCompare.y);
+	}
+	 
+	inline bool operator>(Vector2D &toCompare)
+	{
+		return (x*x + y*y) > (toCompare.x*toCompare.x + toCompare.y*toCompare.y);
+	}
+	inline bool operator>=(Vector2D &toCompare)
+	{
+		return (x*x + y*y) == (toCompare.x*toCompare.x + toCompare.y*toCompare.y);
+	}
+
 };
+
+namespace std
+{
+	template <>
+	struct hash<Vector2D>
+	{
+		size_t operator()(const Vector2D& k) const
+		{
+			// Compute individual hash values for two data members and combine them using XOR and bit shifting
+			return ((hash<float>()(k.x) ^ (hash<float>()(k.y) << 1)) >> 1);
+		}
+	};
+}
 
 namespace Vector2DUtils
 {

@@ -101,7 +101,7 @@ void Agent::update(Vector2D steering_force, float dtime, SDL_Event *event)
 
 
 	// Update orientation
-	if (velocity.Length()>0)
+	if (velocity.Length() > 0)
 		orientation = (float)(atan2(velocity.y, velocity.x) * RAD2DEG);
 
 
@@ -117,21 +117,21 @@ void Agent::draw()
 	if (draw_sprite)
 	{
 		Uint32 sprite;
-		
+
 		if (velocity.Length() < 5.0)
 			sprite = 1;
 		else
 			sprite = (int)(SDL_GetTicks() / (max_velocity)) % sprite_num_frames;
-		
+
 		SDL_Rect srcrect = { (int)sprite * sprite_w, 0, sprite_w, sprite_h };
 		SDL_Rect dstrect = { (int)position.x - (sprite_w / 2), (int)position.y - (sprite_h / 2), sprite_w, sprite_h };
 		SDL_Point center = { sprite_w / 2, sprite_h / 2 };
-		SDL_RenderCopyEx(TheApp::Instance()->getRenderer(), sprite_texture, &srcrect, &dstrect, orientation+90, &center, SDL_FLIP_NONE);
+		SDL_RenderCopyEx(TheApp::Instance()->getRenderer(), sprite_texture, &srcrect, &dstrect, orientation + 90, &center, SDL_FLIP_NONE);
 	}
-	else 
+	else
 	{
 		draw_circle(TheApp::Instance()->getRenderer(), (int)position.x, (int)position.y, 15, color.r, color.g, color.b, color.a);
-		SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), (int)position.x, (int)position.y, (int)(position.x+15*cos(orientation*DEG2RAD)), (int)(position.y+15*sin(orientation*DEG2RAD)));
+		SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), (int)position.x, (int)position.y, (int)(position.x + 15 * cos(orientation*DEG2RAD)), (int)(position.y + 15 * sin(orientation*DEG2RAD)));
 	}
 }
 
@@ -162,6 +162,43 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 	Path tempPath;
 	queue<Vector2D> frontier;
 	frontier.push(inicialNode);
-	vector<Vector2D> came_from;
-	//came_from[inicialNode] = NULL;
+	//map<Vector2D, bool> visited;
+	//visited.emplace(inicialNode, true);
+	unordered_map<Vector2D, Vector2D> came_from;
+	//map<Vector2D, Vector2D> came_from;
+	//came_from.emplace(inicialNode, endNode);
+	//vector<Vector2D, Vector2D> cameFrom;
+	Vector2D current;
+	
+
+
+	vector<Connection> neighbors;
+	//tempPath.points.push_back(Vector2D(150, 314));
+	while (!frontier.empty()) {
+		current = frontier.front();
+		neighbors = graph.GetConnections(current);
+		if (current == endNode) {
+			cout << "     FOUND      ";
+			break;
+		}
+
+		while (!neighbors.empty()) {
+			if (came_from.count(neighbors.back().GetToNode()) == 0) {
+				frontier.push(neighbors.back().GetToNode());
+				came_from[neighbors.back().GetToNode()] = current;
+				neighbors.pop_back();
+			}
+			cout << "Searching ";
+		}
+		frontier.pop();
+	}
+
+	current = endNode;
+	tempPath.points.push_back(current);
+	while (current != inicialNode) {
+		current = came_from[current];
+		tempPath.points.push_back(current);
+	}
+	cout << tempPath.points.size();
+	return tempPath;
 }
