@@ -6,6 +6,9 @@
 #include "Path.h"
 #include "Graph.h"
 #include "Connection.h"
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
 
 class ScenePathFinding :
 	public Scene
@@ -40,4 +43,5 @@ private:
 	bool isValidCell(Vector2D cell);
 
 	void drawGraph();
+	void customTimer();
 };

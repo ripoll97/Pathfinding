@@ -10,9 +10,8 @@
 #include "Path.h"
 #include "Graph.h"
 #include <queue>
-#include <map>
 #include <unordered_map>
-
+#include <algorithm>
 
 class Agent
 {

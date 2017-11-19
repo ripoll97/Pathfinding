@@ -70,9 +70,16 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 						break;
 
 				path.points.push_back(cell2pix(cell));*/
-
-				path = agents[0]->PathFinding(terrainGraph, pix2cell(agents[0]->getPosition()), cell);
+				//customTimer();
+				path = agents[0]->PathFinding(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 			}
+		}
+		if (event->button.button == SDL_BUTTON_RIGHT)
+		{
+			coinPosition = Vector2D(-1, -1);
+			while ((!isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, pix2cell(agents[0]->getPosition()))<3))
+				coinPosition = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
+			cout << coinPosition.x << " " << coinPosition.y;
 		}
 		break;
 	default:
@@ -99,6 +106,7 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 						coinPosition = Vector2D(-1, -1);
 						while ((!isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, pix2cell(agents[0]->getPosition()))<3))
 							coinPosition = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
+						path = agents[0]->PathFinding(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 					}
 				}
 				else
@@ -324,6 +332,15 @@ void ScenePathFinding::initMaze()
 		}
 	}
 	
+	/*
+	terrainGraph.setConnection(Connection(Vector2D(0, 10), Vector2D(40, 10), 1));
+	terrainGraph.setConnection(Connection(Vector2D(0, 11), Vector2D(40, 11), 1));
+	terrainGraph.setConnection(Connection(Vector2D(0, 12), Vector2D(40, 12), 1));
+
+	terrainGraph.setConnection(Connection(Vector2D(40, 10), Vector2D(0, 10), 1));
+	terrainGraph.setConnection(Connection(Vector2D(40, 11), Vector2D(0, 11), 1));
+	terrainGraph.setConnection(Connection(Vector2D(40, 12), Vector2D(0, 12), 1));
+	*/
 
 }
 
@@ -368,6 +385,25 @@ bool ScenePathFinding::isValidCell(Vector2D cell)
 	if ((cell.x < 0) || (cell.y < 0) || (cell.x >= terrain.size()) || (cell.y >= terrain[0].size()) )
 		return false;
 	return !(terrain[(unsigned int)cell.x][(unsigned int)cell.y] == 0);
+}
+
+void ScenePathFinding::customTimer()
+{
+	clock_t startTime = clock(); //Start timer
+	double secondsPassed;
+	double secondsToDelay = 5;
+	std::cout << "Time to delay: " << secondsToDelay << std::endl;
+	bool flag = true;
+	while (flag)
+	{
+		secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
+		if (secondsPassed >= secondsToDelay)
+		{
+			std::cout << secondsPassed << " seconds have passed" << std::endl;
+			flag = false;
+
+		}
+	}
 }
 
 /*

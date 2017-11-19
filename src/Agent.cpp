@@ -162,23 +162,18 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 	Path tempPath;
 	queue<Vector2D> frontier;
 	frontier.push(inicialNode);
-	//map<Vector2D, bool> visited;
-	//visited.emplace(inicialNode, true);
 	unordered_map<Vector2D, Vector2D> came_from;
-	//map<Vector2D, Vector2D> came_from;
-	//came_from.emplace(inicialNode, endNode);
-	//vector<Vector2D, Vector2D> cameFrom;
 	Vector2D current;
 	
-
+	//cout << inicialNode.x << " " << inicialNode.y;
 
 	vector<Connection> neighbors;
-	//tempPath.points.push_back(Vector2D(150, 314));
+
 	while (!frontier.empty()) {
 		current = frontier.front();
 		neighbors = graph.GetConnections(current);
 		if (current == endNode) {
-			cout << "     FOUND      ";
+			//cout << "     FOUND      ";
 			break;
 		}
 
@@ -188,17 +183,18 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 				came_from[neighbors.back().GetToNode()] = current;
 				neighbors.pop_back();
 			}
-			cout << "Searching ";
+			else 
+				neighbors.pop_back();
 		}
 		frontier.pop();
 	}
 
 	current = endNode;
-	tempPath.points.push_back(current);
 	while (current != inicialNode) {
+		tempPath.points.push_back(cell2pix(current));
 		current = came_from[current];
-		tempPath.points.push_back(current);
 	}
-	cout << tempPath.points.size();
+	reverse(tempPath.points.begin(), tempPath.points.end());
+
 	return tempPath;
 }
