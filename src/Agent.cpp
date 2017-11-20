@@ -168,7 +168,7 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 {
 	Path tempPath;
 
-	/*std::priority_queue<std::pair<Vector2D, int>, std::vector<std::pair<Vector2D, int>>, CompareDist> frontier;
+	std::priority_queue<std::pair<Vector2D, int>, std::vector<std::pair<Vector2D, int>>, CompareDist> frontier;
 	frontier.emplace(make_pair(inicialNode, 0)); 
 
 	std::unordered_map<Vector2D, Vector2D> cameFrom;
@@ -186,21 +186,48 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 		current = frontier.top().first;
 		neighbours = graph.GetConnections(current);
 
-		if (current == endNode) {
+		if (current == endNode)
 			break;
-		}
 
 		while (!neighbours.empty()) {
-			for (int i = 0; i < neighbours.size(); i++) {
-				Connection next = neighbours[i];
-				newCost = costSoFar[current] + next.GetCost();
+			newCost = costSoFar[current] + neighbours.back().GetCost();
+			if (costSoFar.count(neighbours.back().GetToNode()) == 0 || newCost < costSoFar[neighbours.back().GetToNode()]) {
+				costSoFar[neighbours.back().GetToNode()] = newCost;
+				frontier.emplace(neighbours.back().GetToNode(), newCost);
+				
+				// pushback de cada cel·la que cerca, per pinter (floodfill)
+				SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
+				fronteraPintada.push_back(actualCel);
 
+				cameFrom[neighbours.back().GetToNode()] = current;
+				neighbours.pop_back();
 			}
+			else
+				neighbours.pop_back();
+			/*
+			for (int i = 0; i < neighbours.size(); i++) {
+				newCost = costSoFar[current] + neighbours[i].GetCost();
+				if (costSoFar.count(neighbours[i].GetToNode()) == 0 || newCost < costSoFar[neighbours[i].GetToNode()]) {
+					costSoFar[neighbours[i].GetToNode()] = newCost;
+					frontier.emplace(neighbours[i].GetToNode(), newCost);
+					cameFrom[neighbours[i].GetToNode()] = current;
+					neighbours.pop_back
+				}*/
+
 		}
-	}*/
+		frontier.pop();
+	}
+	current = endNode;
+	while (current != inicialNode) {
+		tempPath.points.push_back(cell2pix(current));
+		current = cameFrom[current];
+	}
+	reverse(tempPath.points.begin(), tempPath.points.end());
+	return tempPath;
+}
 			
-	
-	queue<Vector2D> frontier;
+	// BFS
+	/*queue<Vector2D> frontier;
 	frontier.push(inicialNode);
 	unordered_map<Vector2D, Vector2D> came_from;
 	Vector2D current;
@@ -240,7 +267,6 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 		current = came_from[current];
 	}
 	reverse(tempPath.points.begin(), tempPath.points.end());
+	*/
 	
-	
-	return tempPath;
-}
+

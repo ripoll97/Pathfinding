@@ -57,6 +57,10 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 	case SDL_KEYDOWN:
 		if (event->key.keysym.scancode == SDL_SCANCODE_SPACE)
 			draw_grid = !draw_grid;
+		if (event->key.keysym.scancode == SDL_SCANCODE_P)
+		{
+			cout <<"Pene" ;
+		}
 		break;
 	case SDL_MOUSEMOTION:
 	case SDL_MOUSEBUTTONDOWN:

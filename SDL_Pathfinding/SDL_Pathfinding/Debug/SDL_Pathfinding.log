@@ -1,24 +1,14 @@
-﻿  ScenePathFinding.cpp
-c:\users\miquel\documents\github\pathfinding\src\vector2d.h(146): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-c:\users\miquel\documents\github\pathfinding\src\vector2d.h(147): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(206): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(318): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(324): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(329): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(334): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-  Agent.cpp
+﻿  Agent.cpp
 c:\users\miquel\documents\github\pathfinding\src\vector2d.h(146): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
 c:\users\miquel\documents\github\pathfinding\src\vector2d.h(147): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
 c:\users\miquel\documents\github\pathfinding\src\agent.cpp(135): warning C4018: '<': no coinciden signed/unsigned
-c:\users\miquel\documents\github\pathfinding\src\agent.cpp(225): warning C4838: la conversión de 'float' en 'int' requiere una conversión de restricción
-c:\users\miquel\documents\github\pathfinding\src\agent.cpp(225): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\agent.cpp(199): warning C4838: la conversión de 'float' en 'int' requiere una conversión de restricción
+c:\users\miquel\documents\github\pathfinding\src\agent.cpp(199): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
   Generando código...
   Omitiendo... (no se detectaron cambios relevantes)
   utils.cpp
   SDL_SimpleApp.cpp
   Graph.cpp
   Connection.cpp
-  main.cpp
-  SteeringBehavior.cpp
   SDL_Pathfinding.vcxproj -> C:\Users\Miquel\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.exe
   SDL_Pathfinding.vcxproj -> C:\Users\Miquel\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.pdb (Partial PDB)
