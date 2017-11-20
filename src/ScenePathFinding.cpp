@@ -104,8 +104,13 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 					if (pix2cell(agents[0]->getPosition()) == coinPosition)
 					{
 						coinPosition = Vector2D(-1, -1);
-						while ((!isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, pix2cell(agents[0]->getPosition()))<3))
+						while ((!isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, pix2cell(agents[0]->getPosition())) < 3)){
 							coinPosition = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
+						}
+
+						// Buida el vector de pintar la frontera (reset)
+						agents[0]->fronteraPintada.clear();
+
 						path = agents[0]->PathFinding(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 					}
 				}
@@ -129,6 +134,7 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 	}
 }
 
+
 void ScenePathFinding::draw()
 {
 	drawMaze();
@@ -138,7 +144,7 @@ void ScenePathFinding::draw()
 	if (draw_grid)
 	{
 		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 255, 255, 255, 127);
-		for (int i = 0; i < SRC_WIDTH; i+=CELL_SIZE)
+		for (int i = 0; i < SRC_WIDTH; i += CELL_SIZE)
 		{
 			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), i, 0, i, SRC_HEIGHT);
 		}
@@ -147,6 +153,7 @@ void ScenePathFinding::draw()
 			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), 0, j, SRC_WIDTH, j);
 		}
 	}
+	agents[0]->draw();
 
 	for (int i = 0; i < (int)path.points.size(); i++)
 	{
@@ -154,11 +161,11 @@ void ScenePathFinding::draw()
 		if (i > 0)
 			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), (int)(path.points[i - 1].x), (int)(path.points[i - 1].y), (int)(path.points[i].x), (int)(path.points[i].y));
 	}
-
 	draw_circle(TheApp::Instance()->getRenderer(), (int)currentTarget.x, (int)currentTarget.y, 15, 255, 0, 0, 255);
 
-	agents[0]->draw();
+	drawCoin();
 }
+
 
 const char* ScenePathFinding::getTitle()
 {

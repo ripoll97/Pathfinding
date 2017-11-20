@@ -130,8 +130,15 @@ void Agent::draw()
 	}
 	else
 	{
+		// Pintar la frontera
+		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 100, 149, 237, 255);
+		for (int i = 0; i < fronteraPintada.size(); i++) {
+			SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &fronteraPintada[i]);
+		}
+
 		draw_circle(TheApp::Instance()->getRenderer(), (int)position.x, (int)position.y, 15, color.r, color.g, color.b, color.a);
 		SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), (int)position.x, (int)position.y, (int)(position.x + 15 * cos(orientation*DEG2RAD)), (int)(position.y + 15 * sin(orientation*DEG2RAD)));
+
 	}
 }
 
@@ -161,7 +168,7 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 {
 	Path tempPath;
 
-	std::priority_queue<std::pair<Vector2D, int>, std::vector<std::pair<Vector2D, int>>, CompareDist> frontier;
+	/*std::priority_queue<std::pair<Vector2D, int>, std::vector<std::pair<Vector2D, int>>, CompareDist> frontier;
 	frontier.emplace(make_pair(inicialNode, 0)); 
 
 	std::unordered_map<Vector2D, Vector2D> cameFrom;
@@ -190,9 +197,9 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 
 			}
 		}
-	}
+	}*/
 			
-	/*
+	
 	queue<Vector2D> frontier;
 	frontier.push(inicialNode);
 	unordered_map<Vector2D, Vector2D> came_from;
@@ -213,6 +220,11 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 		while (!neighbors.empty()) {
 			if (came_from.count(neighbors.back().GetToNode()) == 0) {
 				frontier.push(neighbors.back().GetToNode());
+
+				// pushback de cada cel·la que cerca, per pinter (floodfill)
+				SDL_Rect actualCel = { cell2pix(neighbors.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbors.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
+				fronteraPintada.push_back(actualCel);
+
 				came_from[neighbors.back().GetToNode()] = current;
 				neighbors.pop_back();
 			}
@@ -229,6 +241,6 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 	}
 	reverse(tempPath.points.begin(), tempPath.points.end());
 	
-	*/
+	
 	return tempPath;
 }

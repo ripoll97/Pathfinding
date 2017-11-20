@@ -54,6 +54,8 @@ public:
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);
 	//Pathfinding (Graph, node inici i node final, enum quin algoritme)
 	Path PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode);
+	// Per pintar
+	vector<SDL_Rect> fronteraPintada;
 
 
 	Vector2D cell2pix(Vector2D cell)
