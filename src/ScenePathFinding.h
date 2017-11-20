@@ -45,3 +45,4 @@ private:
 	void drawGraph();
 	void customTimer();
 };
+

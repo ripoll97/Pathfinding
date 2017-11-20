@@ -160,6 +160,39 @@ bool Agent::loadSpriteTexture(char* filename, int _num_frames)
 Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 {
 	Path tempPath;
+
+	std::priority_queue<std::pair<Vector2D, int>, std::vector<std::pair<Vector2D, int>>, CompareDist> frontier;
+	frontier.emplace(make_pair(inicialNode, 0)); 
+
+	std::unordered_map<Vector2D, Vector2D> cameFrom;
+	std::unordered_map<Vector2D, int> costSoFar;
+	Vector2D current;
+	vector<Connection> neighbours;
+
+	int newCost;
+
+	cameFrom[inicialNode] = 0;
+	costSoFar[inicialNode] = 0;
+
+
+	while (!frontier.empty()) {
+		current = frontier.top().first;
+		neighbours = graph.GetConnections(current);
+
+		if (current == endNode) {
+			break;
+		}
+
+		while (!neighbours.empty()) {
+			for (int i = 0; i < neighbours.size(); i++) {
+				Connection next = neighbours[i];
+				newCost = costSoFar[current] + next.GetCost();
+
+			}
+		}
+	}
+			
+	/*
 	queue<Vector2D> frontier;
 	frontier.push(inicialNode);
 	unordered_map<Vector2D, Vector2D> came_from;
@@ -195,6 +228,7 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 		current = came_from[current];
 	}
 	reverse(tempPath.points.begin(), tempPath.points.end());
-
+	
+	*/
 	return tempPath;
 }

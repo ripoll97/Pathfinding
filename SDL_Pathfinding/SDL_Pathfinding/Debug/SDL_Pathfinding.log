@@ -1,2 +1,5 @@
-﻿  SDL_Pathfinding.vcxproj -> C:\Users\Miquel\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.exe
-  SDL_Pathfinding.vcxproj -> C:\Users\Miquel\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.pdb (Partial PDB)
+﻿  Agent.cpp
+d:\jaume\uni\github\pathfinding\src\vector2d.h(146): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+d:\jaume\uni\github\pathfinding\src\vector2d.h(147): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+d:\jaume\uni\github\pathfinding\src\agent.cpp(188): warning C4018: '<': no coinciden signed/unsigned
+  SDL_Pathfinding.vcxproj -> D:\Jaume\Uni\Github\Pathfinding\\bin\SDL_Pathfinding.exe

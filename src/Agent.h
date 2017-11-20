@@ -63,3 +63,18 @@ public:
 	}
 
 };
+
+
+class CompareDist
+{
+public:
+	bool operator()(std::pair<Vector2D, int > n1, std::pair<Vector2D, int> n2) {
+		return n1.second > n2.second;
+	}
+};
+
+struct CompareDist2 {
+	bool operator()(int u1, int u2) {
+		return u1 < u2;
+	}
+};
