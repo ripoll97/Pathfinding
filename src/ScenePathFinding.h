@@ -43,6 +43,9 @@ private:
 	bool isValidCell(Vector2D cell);
 
 	void drawGraph();
+	bool draw_graph;
 	void customTimer();
+	std::vector<SDL_Rect> sand_rects;
+	std::vector<SDL_Rect> rocks_rects;
 };
 

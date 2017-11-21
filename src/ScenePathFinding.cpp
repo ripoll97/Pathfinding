@@ -20,7 +20,8 @@ ScenePathFinding::ScenePathFinding()
 
 	// set agent position coords to the center of a random cell
 	Vector2D rand_cell(-1,-1);
-	while (!isValidCell(rand_cell)) 
+	while (!isValidCell(rand_cell))
+		//rand_cell = Vector2D(37, 11);
 		rand_cell = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
 	agents[0]->setPosition(cell2pix(rand_cell));
 
@@ -28,6 +29,7 @@ ScenePathFinding::ScenePathFinding()
 	coinPosition = Vector2D(-1,-1);
 	while ((!isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, rand_cell)<3)) 
 		coinPosition = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
+	//coinPosition = Vector2D(2, 10);
 	
 	// PathFollowing next Target
 	currentTarget = Vector2D(0, 0);
@@ -57,9 +59,9 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 	case SDL_KEYDOWN:
 		if (event->key.keysym.scancode == SDL_SCANCODE_SPACE)
 			draw_grid = !draw_grid;
-		if (event->key.keysym.scancode == SDL_SCANCODE_P)
+		if (event->key.keysym.scancode == SDL_SCANCODE_G)
 		{
-			cout <<"Pene" ;
+			draw_graph = !draw_graph;
 		}
 		break;
 	case SDL_MOUSEMOTION:
@@ -69,6 +71,7 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 			Vector2D cell = pix2cell(Vector2D((float)(event->button.x), (float)(event->button.y)));
 			if (isValidCell(cell))
 			{
+				cout << cell.x << " " << cell.y << "    ";
 				/*if (path.points.size() > 0)
 					if (path.points[path.points.size() - 1] == cell2pix(cell))
 						break;
@@ -152,8 +155,18 @@ void ScenePathFinding::draw()
 {
 	drawMaze();
 	drawCoin();
-	drawGraph();
 
+	agents[0]->draw();
+
+	if (draw_graph)
+		drawGraph();
+
+	for (int i = 0; i < (int)path.points.size(); i++)
+	{
+		draw_circle(TheApp::Instance()->getRenderer(), (int)(path.points[i].x), (int)(path.points[i].y), 15, 255, 255, 0, 255);
+		if (i > 0)
+			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), (int)(path.points[i - 1].x), (int)(path.points[i - 1].y), (int)(path.points[i].x), (int)(path.points[i].y));
+	}
 	if (draw_grid)
 	{
 		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 255, 255, 255, 127);
@@ -165,14 +178,6 @@ void ScenePathFinding::draw()
 		{
 			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), 0, j, SRC_WIDTH, j);
 		}
-	}
-	agents[0]->draw();
-
-	for (int i = 0; i < (int)path.points.size(); i++)
-	{
-		draw_circle(TheApp::Instance()->getRenderer(), (int)(path.points[i].x), (int)(path.points[i].y), 15, 255, 255, 0, 255);
-		if (i > 0)
-			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), (int)(path.points[i - 1].x), (int)(path.points[i - 1].y), (int)(path.points[i].x), (int)(path.points[i].y));
 	}
 	draw_circle(TheApp::Instance()->getRenderer(), (int)currentTarget.x, (int)currentTarget.y, 15, 255, 0, 0, 255);
 
@@ -193,6 +198,12 @@ void ScenePathFinding::drawMaze()
 		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 0, 255, 255);
 		for (unsigned int i = 0; i < maze_rects.size(); i++)
 			SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &maze_rects[i]);
+		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 240, 230, 140, 255);
+		for (unsigned int i = 0; i < sand_rects.size(); i++)
+			SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &sand_rects[i]);
+		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 160, 69, 19, 255);
+		for (unsigned int i = 0; i < rocks_rects.size(); i++)
+			SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &rocks_rects[i]);
 	}
 	else
 	{
@@ -211,12 +222,30 @@ void ScenePathFinding::drawCoin()
 void ScenePathFinding::drawGraph()
 {
 	for (int i = 0; i < terrainGraph.getSize(); i++) {
-		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 200, 100, 200, 127);
-		SDL_RenderDrawLine(TheApp::Instance()->getRenderer(),
-			cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).x,
-			cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).y,
-			cell2pix(terrainGraph.terrainGraph[i].GetToNode()).x,
-			cell2pix(terrainGraph.terrainGraph[i].GetToNode()).y);
+				if (terrainGraph.terrainGraph[i].GetCost() == 1){
+			SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 200, 100, 200, 127);
+			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(),
+				cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).x,
+				cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).y,
+				cell2pix(terrainGraph.terrainGraph[i].GetToNode()).x,
+				cell2pix(terrainGraph.terrainGraph[i].GetToNode()).y);
+		}
+		else if (terrainGraph.terrainGraph[i].GetCost() == 2) {
+			SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 250, 0, 0, 255);
+			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(),
+				cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).x,
+				cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).y,
+				cell2pix(terrainGraph.terrainGraph[i].GetToNode()).x,
+				cell2pix(terrainGraph.terrainGraph[i].GetToNode()).y);
+		}
+		else if (terrainGraph.terrainGraph[i].GetCost() == 4) {
+			SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 139, 69, 19, 127);
+			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(),
+				cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).x,
+				cell2pix(terrainGraph.terrainGraph[i].GetFromNode()).y,
+				cell2pix(terrainGraph.terrainGraph[i].GetToNode()).x,
+				cell2pix(terrainGraph.terrainGraph[i].GetToNode()).y);
+		}
 	}
 }
 
@@ -224,6 +253,7 @@ void ScenePathFinding::initMaze()
 {
 
 	// Initialize a list of Rectagles describing the maze geometry (useful for collision avoidance)
+#pragma region
 	SDL_Rect rect = { 0, 0, 1280, 32 };
 	maze_rects.push_back(rect);
 	rect = { 608, 32, 64, 32 };
@@ -292,6 +322,109 @@ void ScenePathFinding::initMaze()
 	maze_rects.push_back(rect);
 	rect = { 928,288,32,128 };
 	maze_rects.push_back(rect);
+#pragma endregion
+
+	// Sand position
+#pragma region
+	rect = { 17 * CELL_SIZE, 10 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 17 * CELL_SIZE, 11 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 22 * CELL_SIZE, 10 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 22 * CELL_SIZE, 11 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 5 * CELL_SIZE, 12 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 6 * CELL_SIZE, 12 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 7 * CELL_SIZE, 12 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 8 * CELL_SIZE, 12 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 26 * CELL_SIZE, 13 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 26 * CELL_SIZE, 14 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 26 * CELL_SIZE, 15 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 15 * CELL_SIZE, 19 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 16 * CELL_SIZE, 19 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 17 * CELL_SIZE, 19 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 18 * CELL_SIZE, 19 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 36 * CELL_SIZE, 17 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 36 * CELL_SIZE, 18 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 36 * CELL_SIZE, 19 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 37 * CELL_SIZE, 19 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 11 * CELL_SIZE, 3 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 11 * CELL_SIZE, 2 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 10 * CELL_SIZE, 2 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 10 * CELL_SIZE, 3 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 29 * CELL_SIZE, 5 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 29 * CELL_SIZE, 6 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 29 * CELL_SIZE, 7 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 1 * CELL_SIZE, 21 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 2 * CELL_SIZE, 21 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+	rect = { 3 * CELL_SIZE, 21 * CELL_SIZE, 32, 32 };
+	sand_rects.push_back(rect);
+#pragma endregion
+
+	// Rocks position
+#pragma region
+	rect = { 14 * CELL_SIZE, 10 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 23 * CELL_SIZE, 11 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 1 * CELL_SIZE, 4 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 2 * CELL_SIZE, 4 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 3 * CELL_SIZE, 4 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 13 * CELL_SIZE, 13 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 13 * CELL_SIZE, 14 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 21 * CELL_SIZE, 16 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 21 * CELL_SIZE, 15 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 20 * CELL_SIZE, 15 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 19 * CELL_SIZE, 2 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 19 * CELL_SIZE, 3 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 20 * CELL_SIZE, 3 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 20 * CELL_SIZE, 2 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 19 * CELL_SIZE, 9 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 20 * CELL_SIZE, 9 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 32 * CELL_SIZE, 4 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+	rect = { 33 * CELL_SIZE, 4 * CELL_SIZE, 32, 32 };
+	rocks_rects.push_back(rect);
+#pragma endregion
 
 	// Initialize the terrain matrix (for each cell a zero value indicates it's a wall)
 	
@@ -316,6 +449,24 @@ void ScenePathFinding::initMaze()
 				    break;
 				}  
 			}
+
+			for (unsigned int b = 0; b < sand_rects.size(); b++)
+			{
+				if (Vector2DUtils::IsInsideRect(cell_center, (float)sand_rects[b].x, (float)sand_rects[b].y, (float)sand_rects[b].w, (float)sand_rects[b].h))
+				{
+					terrain[i][j] = 2;
+					break;
+				}
+			}
+
+			for (unsigned int b = 0; b < rocks_rects.size(); b++)
+			{
+				if (Vector2DUtils::IsInsideRect(cell_center, (float)rocks_rects[b].x, (float)rocks_rects[b].y, (float)rocks_rects[b].w, (float)rocks_rects[b].h))
+				{
+					terrain[i][j] = 4;
+					break;
+				}
+			}
 			
 		}
 	}
@@ -325,12 +476,12 @@ void ScenePathFinding::initMaze()
 	{
 		for (int j = 0; j < num_cell_y; j++)
 		{
-			if (terrain[i][j] != 0) {
+			
+			if (terrain[i][j] == 1) {
 				//Right
 				if ((i < (int)terrain.size() - 1) && terrain[i + 1][j] != 0) {
 					Connection tempCon(Vector2D(i,j), Vector2D(i+1, j), 1);
 					terrainGraph.setConnection(tempCon);
-
 				}
 				//Bottom
 				if ((j < (int)terrain[0].size() - 1) && terrain[i][j + 1] != 0) {
@@ -349,18 +500,66 @@ void ScenePathFinding::initMaze()
 				}
 
 			}
+
+			else if (terrain[i][j] == 2) {
+				//Right
+				if ((i < (int)terrain.size() - 1) && terrain[i + 1][j] != 0) {
+					Connection tempCon(Vector2D(i, j), Vector2D(i + 1, j), 2);
+					terrainGraph.setConnection(tempCon);
+				}
+				//Bottom
+				if ((j < (int)terrain[0].size() - 1) && terrain[i][j + 1] != 0) {
+					Connection tempCon(Vector2D(i, j), Vector2D(i, j + 1), 2);
+					terrainGraph.setConnection(tempCon);
+				}
+				//Left
+				if ((i > 0) && terrain[i - 1][j] != 0) {
+					Connection tempCon(Vector2D(i, j), Vector2D(i - 1, j), 2);
+					terrainGraph.setConnection(tempCon);
+				}
+				// Top
+				if ((j > 0) && terrain[i][j - 1] != 0) {
+					Connection tempCon(Vector2D(i, j), Vector2D(i, j - 1), 2);
+					terrainGraph.setConnection(tempCon);
+				}
+
+			}
+
+			else if (terrain[i][j] == 4) {
+				//Right
+				if ((i < (int)terrain.size() - 1) && terrain[i + 1][j] != 0) {
+					Connection tempCon(Vector2D(i, j), Vector2D(i + 1, j), 4);
+					terrainGraph.setConnection(tempCon);
+				}
+				//Bottom
+				if ((j < (int)terrain[0].size() - 1) && terrain[i][j + 1] != 0) {
+					Connection tempCon(Vector2D(i, j), Vector2D(i, j + 1), 4);
+					terrainGraph.setConnection(tempCon);
+				}
+				//Left
+				if ((i > 0) && terrain[i - 1][j] != 0) {
+					Connection tempCon(Vector2D(i, j), Vector2D(i - 1, j), 4);
+					terrainGraph.setConnection(tempCon);
+				}
+				// Top
+				if ((j > 0) && terrain[i][j - 1] != 0) {
+					Connection tempCon(Vector2D(i, j), Vector2D(i, j - 1), 4);
+					terrainGraph.setConnection(tempCon);
+				}
+
+			}
 		}
 	}
 	
-	/*
-	terrainGraph.setConnection(Connection(Vector2D(0, 10), Vector2D(40, 10), 1));
-	terrainGraph.setConnection(Connection(Vector2D(0, 11), Vector2D(40, 11), 1));
-	terrainGraph.setConnection(Connection(Vector2D(0, 12), Vector2D(40, 12), 1));
+	
+	terrainGraph.setConnection(Connection(Vector2D(0, 10), Vector2D(39, 10), 1));
+	terrainGraph.setConnection(Connection(Vector2D(0, 11), Vector2D(39, 11), 1));
+	terrainGraph.setConnection(Connection(Vector2D(0, 12), Vector2D(39, 12), 1));
 
-	terrainGraph.setConnection(Connection(Vector2D(40, 10), Vector2D(0, 10), 1));
-	terrainGraph.setConnection(Connection(Vector2D(40, 11), Vector2D(0, 11), 1));
-	terrainGraph.setConnection(Connection(Vector2D(40, 12), Vector2D(0, 12), 1));
-	*/
+	terrainGraph.setConnection(Connection(Vector2D(39, 10), Vector2D(0, 10), 1));
+	terrainGraph.setConnection(Connection(Vector2D(39, 11), Vector2D(0, 11), 1));
+	terrainGraph.setConnection(Connection(Vector2D(39, 12), Vector2D(0, 12), 1));
+	
 
 }
 

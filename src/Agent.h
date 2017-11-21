@@ -77,9 +77,3 @@ public:
 		return n1.second > n2.second;
 	}
 };
-
-struct CompareDist2 {
-	bool operator()(int u1, int u2) {
-		return u1 < u2;
-	}
-};

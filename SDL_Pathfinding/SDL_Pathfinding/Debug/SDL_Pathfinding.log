@@ -1,15 +1,26 @@
 ﻿  ScenePathFinding.cpp
-d:\jaume\uni\github\pathfinding\src\vector2d.h(146): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-d:\jaume\uni\github\pathfinding\src\vector2d.h(147): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-d:\jaume\uni\github\pathfinding\src\scenepathfinding.cpp(219): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-d:\jaume\uni\github\pathfinding\src\scenepathfinding.cpp(331): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-d:\jaume\uni\github\pathfinding\src\scenepathfinding.cpp(337): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-d:\jaume\uni\github\pathfinding\src\scenepathfinding.cpp(342): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-d:\jaume\uni\github\pathfinding\src\scenepathfinding.cpp(347): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\vector2d.h(146): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\vector2d.h(147): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(231): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(239): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(247): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(483): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(488): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(493): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(498): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(507): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(512): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(517): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(522): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(531): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(536): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(541): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\miquel\documents\github\pathfinding\src\scenepathfinding.cpp(546): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
   Generando código...
   Omitiendo... (no se detectaron cambios relevantes)
   utils.cpp
   SDL_SimpleApp.cpp
   Graph.cpp
   Connection.cpp
-  SDL_Pathfinding.vcxproj -> D:\Jaume\Uni\Github\Pathfinding\\bin\SDL_Pathfinding.exe
+  SDL_Pathfinding.vcxproj -> C:\Users\Miquel\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.exe
+  SDL_Pathfinding.vcxproj -> C:\Users\Miquel\Documents\GitHub\Pathfinding\\bin\SDL_Pathfinding.pdb (Partial PDB)
