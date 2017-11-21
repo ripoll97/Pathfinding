@@ -52,8 +52,11 @@ public:
 	void update(Vector2D steering_force, float dtime, SDL_Event *event);
 	void draw();
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);
-	//Pathfinding (Graph, node inici i node final, enum quin algoritme)
-	Path PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode);
+	//Pathfinding (Graph, node inici i node final, enum quin algoritme). 
+	Path PathFinding_BFS(Graph graph, Vector2D inicialNode, Vector2D endNode);
+	Path PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D endNode);
+	Path PathFinding_A_Estrella(Graph graph, Vector2D inicialNode, Vector2D endNode);
+	Path PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D endNode);
 	// Per pintar
 	vector<SDL_Rect> fronteraPintada;
 

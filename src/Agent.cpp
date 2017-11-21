@@ -164,12 +164,59 @@ bool Agent::loadSpriteTexture(char* filename, int _num_frames)
 	return true;
 }
 
-Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
+Path Agent::PathFinding_BFS(Graph graph, Vector2D inicialNode, Vector2D endNode)
+{
+	Path tempPath;
+
+	queue<Vector2D> frontier;
+	frontier.push(inicialNode);
+	unordered_map<Vector2D, Vector2D> came_from;
+	Vector2D current;
+
+	//cout << inicialNode.x << " " << inicialNode.y;
+
+	vector<Connection> neighbors;
+
+	while (!frontier.empty()) {
+		current = frontier.front();
+		neighbors = graph.GetConnections(current);
+		if (current == endNode) {
+			//cout << "     FOUND      ";
+			break;
+		}
+
+		while (!neighbors.empty()) {
+			if (came_from.count(neighbors.back().GetToNode()) == 0) {
+				frontier.push(neighbors.back().GetToNode());
+
+				// pushback de cada cel·la que cerca, per pinter (floodfill)
+				SDL_Rect actualCel = { cell2pix(neighbors.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbors.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
+				fronteraPintada.push_back(actualCel);
+
+				came_from[neighbors.back().GetToNode()] = current;
+				neighbors.pop_back();
+			}
+			else
+				neighbors.pop_back();
+		}
+		frontier.pop();
+	}
+
+	current = endNode;
+	while (current != inicialNode) {
+		tempPath.points.push_back(cell2pix(current));
+		current = came_from[current];
+	}
+	reverse(tempPath.points.begin(), tempPath.points.end());
+	return tempPath;
+}
+
+Path Agent::PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D endNode)
 {
 	Path tempPath;
 
 	std::priority_queue<std::pair<Vector2D, int>, std::vector<std::pair<Vector2D, int>>, CompareDist> frontier;
-	frontier.emplace(make_pair(inicialNode, 0)); 
+	frontier.emplace(make_pair(inicialNode, 0));
 
 	std::unordered_map<Vector2D, Vector2D> cameFrom;
 	std::unordered_map<Vector2D, int> costSoFar;
@@ -194,7 +241,7 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 			if (costSoFar.count(neighbours.back().GetToNode()) == 0 || newCost < costSoFar[neighbours.back().GetToNode()]) {
 				costSoFar[neighbours.back().GetToNode()] = newCost;
 				frontier.emplace(neighbours.back().GetToNode(), newCost);
-				
+
 				// pushback de cada cel·la que cerca, per pinter (floodfill)
 				SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
 				fronteraPintada.push_back(actualCel);
@@ -206,13 +253,13 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 				neighbours.pop_back();
 			/*
 			for (int i = 0; i < neighbours.size(); i++) {
-				newCost = costSoFar[current] + neighbours[i].GetCost();
-				if (costSoFar.count(neighbours[i].GetToNode()) == 0 || newCost < costSoFar[neighbours[i].GetToNode()]) {
-					costSoFar[neighbours[i].GetToNode()] = newCost;
-					frontier.emplace(neighbours[i].GetToNode(), newCost);
-					cameFrom[neighbours[i].GetToNode()] = current;
-					neighbours.pop_back
-				}*/
+			newCost = costSoFar[current] + neighbours[i].GetCost();
+			if (costSoFar.count(neighbours[i].GetToNode()) == 0 || newCost < costSoFar[neighbours[i].GetToNode()]) {
+			costSoFar[neighbours[i].GetToNode()] = newCost;
+			frontier.emplace(neighbours[i].GetToNode(), newCost);
+			cameFrom[neighbours[i].GetToNode()] = current;
+			neighbours.pop_back
+			}*/
 
 		}
 		frontier.pop();
@@ -225,48 +272,16 @@ Path Agent::PathFinding(Graph graph, Vector2D inicialNode, Vector2D endNode)
 	reverse(tempPath.points.begin(), tempPath.points.end());
 	return tempPath;
 }
-			
-	// BFS
-	/*queue<Vector2D> frontier;
-	frontier.push(inicialNode);
-	unordered_map<Vector2D, Vector2D> came_from;
-	Vector2D current;
-	
-	//cout << inicialNode.x << " " << inicialNode.y;
 
-	vector<Connection> neighbors;
+Path Agent::PathFinding_A_Estrella(Graph graph, Vector2D inicialNode, Vector2D endNode)
+{
+	Path tempPath;
 
-	while (!frontier.empty()) {
-		current = frontier.front();
-		neighbors = graph.GetConnections(current);
-		if (current == endNode) {
-			//cout << "     FOUND      ";
-			break;
-		}
+	return tempPath;
+}
+Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D endNode)
+{
+	Path tempPath;
 
-		while (!neighbors.empty()) {
-			if (came_from.count(neighbors.back().GetToNode()) == 0) {
-				frontier.push(neighbors.back().GetToNode());
-
-				// pushback de cada cel·la que cerca, per pinter (floodfill)
-				SDL_Rect actualCel = { cell2pix(neighbors.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbors.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
-				fronteraPintada.push_back(actualCel);
-
-				came_from[neighbors.back().GetToNode()] = current;
-				neighbors.pop_back();
-			}
-			else 
-				neighbors.pop_back();
-		}
-		frontier.pop();
-	}
-
-	current = endNode;
-	while (current != inicialNode) {
-		tempPath.points.push_back(cell2pix(current));
-		current = came_from[current];
-	}
-	reverse(tempPath.points.begin(), tempPath.points.end());
-	*/
-	
-
+	return tempPath;
+}

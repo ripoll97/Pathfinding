@@ -75,7 +75,11 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 
 				path.points.push_back(cell2pix(cell));*/
 				//customTimer();
-				path = agents[0]->PathFinding(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+				//Per canviar de algoritme, descomentar el que es vol usar i comentar la resta.
+					//path = agents[0]->PathFinding_BFS(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+					//path = agents[0]->PathFinding_Dijkstra(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+					//path = agents[0]->PathFinding_A_Estrella(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+					//path = agents[0]->PathFinding_Greedy_BFG(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 			}
 		}
 		if (event->button.button == SDL_BUTTON_RIGHT)
@@ -115,7 +119,8 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 						// Buida el vector de pintar la frontera (reset)
 						agents[0]->fronteraPintada.clear();
 
-						path = agents[0]->PathFinding(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+						//path = agents[0]->PathFinding_BFS(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+						
 					}
 				}
 				else
@@ -135,6 +140,10 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 	else
 	{
 		agents[0]->update(Vector2D(0,0), dtime, event);
+		//path = agents[0]->PathFinding_BFS(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+		path = agents[0]->PathFinding_Dijkstra(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+		//path = agents[0]->PathFinding_A_Estrella(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+		//path = agents[0]->PathFinding_Greedy_BFG(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 	}
 }
 
