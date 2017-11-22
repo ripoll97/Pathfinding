@@ -353,7 +353,7 @@ Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D e
 		while (!neighbours.empty()) {
 			//SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
 
-			if (neighbours.back().GetToNode() != cameFrom[1] /*canviar per recorrer cameFrom?*/) {
+			if (cameFrom.count(neighbours.back().GetToNode()) == 0) {
 				priority = heuristic(neighbours.back().GetToNode(), endNode);
 				frontier.push(make_pair(neighbours.back().GetToNode(), priority));
 
@@ -381,7 +381,7 @@ Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D e
 	return tempPath;
 }
 
-float heuristic(Vector2D from, Vector2D to) {
+float Agent::heuristic(Vector2D from, Vector2D to) {
 	float dist = sqrt(pow(abs(to.x - from.x),2) + pow(abs(to.y - from.y),2));
 	return dist;
 }

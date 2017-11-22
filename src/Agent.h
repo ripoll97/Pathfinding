@@ -59,8 +59,7 @@ public:
 	Path PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D endNode);
 	// Per pintar
 	vector<SDL_Rect> fronteraPintada;
-
-
+	float heuristic(Vector2D from, Vector2D to);
 	Vector2D cell2pix(Vector2D cell)
 	{
 		int offset = CELL_SIZE / 2;
