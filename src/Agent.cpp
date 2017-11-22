@@ -215,11 +215,11 @@ Path Agent::PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D end
 {
 	Path tempPath;
 
-	std::priority_queue<std::pair<Vector2D, int>, std::vector<std::pair<Vector2D, int>>, CompareDist> frontier;
+	priority_queue<pair<Vector2D, int>, vector<pair<Vector2D, int>>, CompareDist> frontier;
 	//frontier.emplace(make_pair(inicialNode, 0));
 	frontier.push(make_pair(inicialNode, 0));
-	std::unordered_map<Vector2D, Vector2D> cameFrom;
-	std::unordered_map<Vector2D, int> costSoFar;
+	unordered_map<Vector2D, Vector2D> cameFrom;
+	unordered_map<Vector2D, int> costSoFar;
 	Vector2D current;
 	vector<Connection> neighbours;
 
@@ -271,11 +271,117 @@ Path Agent::PathFinding_A_Estrella(Graph graph, Vector2D inicialNode, Vector2D e
 {
 	Path tempPath;
 
+	priority_queue<pair<Vector2D, int>, vector<pair<Vector2D, int>>, CompareDist> frontier;
+	//frontier.emplace(make_pair(inicialNode, 0));
+	frontier.push(make_pair(inicialNode, 0));
+	unordered_map<Vector2D, Vector2D> cameFrom;
+	unordered_map<Vector2D, int> costSoFar;
+	Vector2D current;
+	vector<Connection> neighbours;
+
+	int newCost;
+	int priority;
+
+	cameFrom[inicialNode] = 0;
+	costSoFar[inicialNode] = 0;
+
+
+	while (!frontier.empty()) {
+		current = frontier.top().first;
+		neighbours = graph.GetConnections(current);
+
+		if (current == endNode)
+			break;
+
+		while (!neighbours.empty()) {
+			newCost = costSoFar[current] + neighbours.back().GetCost();
+			//SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
+
+			if (costSoFar.count(neighbours.back().GetToNode()) == 0 || newCost < costSoFar[neighbours.back().GetToNode()]) {
+				costSoFar[neighbours.back().GetToNode()] = newCost;
+				priority = newCost + heuristic(neighbours.back().GetToNode(), endNode);
+				frontier.push(make_pair(neighbours.back().GetToNode(), priority));
+
+				// pushback de cada cel·la que cerca, per pinter (floodfill)
+				SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
+				fronteraPintada.push_back(actualCel);
+
+				cameFrom[neighbours.back().GetToNode()] = current;
+				neighbours.pop_back();
+			}
+			else
+				//fronteraPintada.push_back(actualCel);
+				neighbours.pop_back();
+		}
+		frontier.pop();
+	}
+	current = endNode;
+	while (current != inicialNode) {
+		tempPath.points.push_back(cell2pix(current));
+		current = cameFrom[current];
+	}
+	reverse(tempPath.points.begin(), tempPath.points.end());
+	cout << "Cost: " << costSoFar[endNode] << "  ";
 	return tempPath;
+
 }
+
+
 Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D endNode)
 {
 	Path tempPath;
 
+	priority_queue<pair<Vector2D, int>, vector<pair<Vector2D, int>>, CompareDist> frontier;
+	//frontier.emplace(make_pair(inicialNode, 0));
+	frontier.push(make_pair(inicialNode, 0));
+	unordered_map<Vector2D, Vector2D> cameFrom;
+	Vector2D current;
+	vector<Connection> neighbours;
+
+	int priority;
+
+	cameFrom[inicialNode] = 0;
+
+
+	while (!frontier.empty()) {
+		current = frontier.top().first;
+		neighbours = graph.GetConnections(current);
+
+		if (current == endNode)
+			break;
+
+		while (!neighbours.empty()) {
+			//SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
+
+			if (neighbours.back().GetToNode() != cameFrom[1] /*canviar per recorrer cameFrom?*/) {
+				priority = heuristic(neighbours.back().GetToNode(), endNode);
+				frontier.push(make_pair(neighbours.back().GetToNode(), priority));
+
+				// pushback de cada cel·la que cerca, per pinter (floodfill)
+				SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
+				fronteraPintada.push_back(actualCel);
+
+				cameFrom[neighbours.back().GetToNode()] = current;
+				neighbours.pop_back();
+			}
+			else
+				//fronteraPintada.push_back(actualCel);
+				neighbours.pop_back();
+			
+		}
+		frontier.pop();
+	}
+	current = endNode;
+	while (current != inicialNode) {
+		tempPath.points.push_back(cell2pix(current));
+		current = cameFrom[current];
+	}
+	reverse(tempPath.points.begin(), tempPath.points.end());
+
 	return tempPath;
+}
+
+float heuristic(Vector2D from, Vector2D to) {
+	float dist = sqrt(pow(abs(to.x - from.x),2) + pow(abs(to.y - from.y),2));
+	return dist;
 }
