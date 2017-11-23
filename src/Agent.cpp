@@ -148,7 +148,7 @@ bool Agent::loadSpriteTexture(char* filename, int _num_frames)
 
 	SDL_Surface *image = IMG_Load(filename);
 	if (!image) {
-		cout << "IMG_Load: " << IMG_GetError() << endl;
+		std::cout << "IMG_Load: " << IMG_GetError() << endl;
 		return false;
 	}
 	sprite_texture = SDL_CreateTextureFromSurface(TheApp::Instance()->getRenderer(), image);
@@ -177,6 +177,9 @@ Path Agent::PathFinding_BFS(Graph graph, Vector2D inicialNode, Vector2D endNode)
 
 	vector<Connection> neighbors;
 
+	int totalExplorationNodes = 0;
+	int currentNodes = 0;
+
 	while (!frontier.empty()) {
 		current = frontier.front();
 		neighbors = graph.GetConnections(current);
@@ -195,6 +198,8 @@ Path Agent::PathFinding_BFS(Graph graph, Vector2D inicialNode, Vector2D endNode)
 
 				came_from[neighbors.back().GetToNode()] = current;
 				neighbors.pop_back();
+
+				currentNodes++;
 			}
 			else
 				neighbors.pop_back();
@@ -208,6 +213,25 @@ Path Agent::PathFinding_BFS(Graph graph, Vector2D inicialNode, Vector2D endNode)
 		current = came_from[current];
 	}
 	reverse(tempPath.points.begin(), tempPath.points.end());
+
+	totalNodes.push_back(currentNodes);
+	std::cout << "Monedes Trobades: " << totalNodes.size() << endl;
+	std::cout << "Nodes Explorats: " << totalNodes.back() << endl;
+	for (int i = 0; i < totalNodes.size(); i++) {
+		totalExplorationNodes += totalNodes[i];
+		if (minimNodes > totalNodes[i]) {
+			minimNodes = totalNodes[i];
+		}
+		if (maximNodes < totalNodes[i]) {
+			maximNodes = totalNodes[i];
+		}
+	}
+	std::cout << "Exploracio Total Nodes: " << totalExplorationNodes << endl;
+	std::cout << "Minim Nodes: " << minimNodes << endl;
+	std::cout << "Màxim Nodes: " << maximNodes << endl;
+	mitjanaNodes = totalExplorationNodes / totalNodes.size();
+	std::cout << "Mitjana Nodes: " << mitjanaNodes << endl << endl;
+
 	return tempPath;
 }
 
@@ -228,6 +252,8 @@ Path Agent::PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D end
 	cameFrom[inicialNode] = 0;
 	costSoFar[inicialNode] = 0;
 
+	int totalExplorationNodes = 0;
+	int currentNodes = 0;
 
 	while (!frontier.empty()) {
 		current = frontier.top().first;
@@ -250,6 +276,8 @@ Path Agent::PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D end
 
 				cameFrom[neighbours.back().GetToNode()] = current;
 				neighbours.pop_back();
+
+				currentNodes++;
 			}
 			else
 				//fronteraPintada.push_back(actualCel);
@@ -263,7 +291,25 @@ Path Agent::PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D end
 		current = cameFrom[current];
 	}
 	reverse(tempPath.points.begin(), tempPath.points.end());
-	cout << "Cost: " << costSoFar[endNode] << "  ";
+
+	totalNodes.push_back(currentNodes);
+	std::cout << "Monedes Trobades: " << totalNodes.size() << endl;
+	std::cout << "Cost del cami: " << costSoFar[endNode] << endl;
+	std::cout << "Nodes Explorats: " << totalNodes.back() << endl;
+	for (int i = 0; i < totalNodes.size(); i++) {
+		totalExplorationNodes += totalNodes[i];
+		if (minimNodes > totalNodes[i]) {
+			minimNodes = totalNodes[i];
+		}
+		if (maximNodes < totalNodes[i]) {
+			maximNodes = totalNodes[i];
+		}
+	}
+	std::cout << "Exploracio Total Nodes: " << totalExplorationNodes << endl;
+	std::cout << "Minim Nodes: " << minimNodes << endl;
+	std::cout << "Màxim Nodes: " << maximNodes << endl;
+	mitjanaNodes = totalExplorationNodes / totalNodes.size();
+	std::cout << "Mitjana Nodes: " << mitjanaNodes << endl << endl;
 	return tempPath;
 }
 
@@ -285,6 +331,8 @@ Path Agent::PathFinding_A_Estrella(Graph graph, Vector2D inicialNode, Vector2D e
 	cameFrom[inicialNode] = 0;
 	costSoFar[inicialNode] = 0;
 
+	int totalExplorationNodes = 0;
+	int currentNodes = 0;
 
 	while (!frontier.empty()) {
 		current = frontier.top().first;
@@ -308,12 +356,15 @@ Path Agent::PathFinding_A_Estrella(Graph graph, Vector2D inicialNode, Vector2D e
 
 				cameFrom[neighbours.back().GetToNode()] = current;
 				neighbours.pop_back();
+
+				currentNodes++;
 			}
 			else
 				//fronteraPintada.push_back(actualCel);
 				neighbours.pop_back();
 		}
 		frontier.pop();
+
 	}
 	current = endNode;
 	while (current != inicialNode) {
@@ -321,7 +372,26 @@ Path Agent::PathFinding_A_Estrella(Graph graph, Vector2D inicialNode, Vector2D e
 		current = cameFrom[current];
 	}
 	reverse(tempPath.points.begin(), tempPath.points.end());
-	cout << "Cost: " << costSoFar[endNode] << "  ";
+
+
+	totalNodes.push_back(currentNodes);
+	std::cout << "Monedes Trobades: " << totalNodes.size() << endl;
+	std::cout << "Cost del cami: " << costSoFar[endNode] << endl;
+	std::cout << "Nodes Explorats: " << totalNodes.back() << endl;
+	for (int i = 0; i < totalNodes.size(); i++) {
+		totalExplorationNodes += totalNodes[i];
+		if (minimNodes > totalNodes[i]) {
+			minimNodes = totalNodes[i];
+		}
+		if (maximNodes < totalNodes[i]) {
+			maximNodes = totalNodes[i];
+		}
+	}
+	std::cout << "Exploracio Total Nodes: " << totalExplorationNodes << endl;
+	std::cout << "Minim Nodes: " << minimNodes << endl;
+	std::cout << "Màxim Nodes: " << maximNodes << endl;
+	mitjanaNodes = totalExplorationNodes / totalNodes.size();
+	std::cout << "Mitjana Nodes: " << mitjanaNodes << endl << endl;
 	return tempPath;
 
 }
@@ -342,10 +412,14 @@ Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D e
 
 	cameFrom[inicialNode] = 0;
 
+	int totalExplorationNodes = 0;
+	int currentNodes = 0;
+
 
 	while (!frontier.empty()) {
 		current = frontier.top().first;
 		neighbours = graph.GetConnections(current);
+		frontier.pop();
 
 		if (current == endNode)
 			break;
@@ -363,13 +437,15 @@ Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D e
 
 				cameFrom[neighbours.back().GetToNode()] = current;
 				neighbours.pop_back();
+
+				currentNodes++;
 			}
 			else
 				//fronteraPintada.push_back(actualCel);
 				neighbours.pop_back();
 			
 		}
-		frontier.pop();
+		
 	}
 	current = endNode;
 	while (current != inicialNode) {
@@ -378,10 +454,30 @@ Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D e
 	}
 	reverse(tempPath.points.begin(), tempPath.points.end());
 
+
+	totalNodes.push_back(currentNodes);
+	std::cout << "Monedes Trobades: " << totalNodes.size() << endl;
+	std::cout << "Nodes Explorats: " << totalNodes.back() << endl;
+	for (int i = 0; i < totalNodes.size(); i++) {
+		totalExplorationNodes += totalNodes[i];
+		if (minimNodes > totalNodes[i]) {
+			minimNodes = totalNodes[i];
+		}
+		if (maximNodes < totalNodes[i]) {
+			maximNodes = totalNodes[i];
+		}
+	}
+	std::cout << "Exploracio Total Nodes: " << totalExplorationNodes << endl;
+	std::cout << "Minim Nodes: " << minimNodes << endl;
+	std::cout << "Màxim Nodes: " << maximNodes << endl;
+	mitjanaNodes = totalExplorationNodes / totalNodes.size();
+	std::cout << "Mitjana Nodes: " << mitjanaNodes << endl << endl;
+
 	return tempPath;
 }
 
 float Agent::heuristic(Vector2D from, Vector2D to) {
-	float dist = sqrt(pow(abs(to.x - from.x),2) + pow(abs(to.y - from.y),2));
-	return dist;
+	//float dist = sqrt(pow(abs(to.x - from.x),2) + pow(abs(to.y - from.y),2));
+	float dist2 = abs(to.x - from.x) + abs(to.y - from.y);
+	return dist2;
 }

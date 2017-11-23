@@ -66,6 +66,12 @@ public:
 		return Vector2D(cell.x*CELL_SIZE + offset, cell.y*CELL_SIZE + offset);
 	}
 
+
+	vector<int> totalNodes;
+	int minimNodes = 9999;
+	int maximNodes = 0;
+	float mitjanaNodes;
+
 };
 
 

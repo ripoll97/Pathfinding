@@ -143,10 +143,10 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 	else
 	{
 		agents[0]->update(Vector2D(0,0), dtime, event);
-		//path = agents[0]->PathFinding_BFS(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+		path = agents[0]->PathFinding_BFS(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 		//path = agents[0]->PathFinding_Dijkstra(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 		//path = agents[0]->PathFinding_A_Estrella(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
-		path = agents[0]->PathFinding_Greedy_BFG(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+		//path = agents[0]->PathFinding_Greedy_BFG(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 	}
 }
 
