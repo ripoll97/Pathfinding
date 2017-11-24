@@ -57,15 +57,23 @@ public:
 	Path PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D endNode);
 	Path PathFinding_A_Estrella(Graph graph, Vector2D inicialNode, Vector2D endNode);
 	Path PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D endNode);
+	Path PathFinding_GroupCoins_A_Star(Graph graph, Vector2D inicialNode, vector<Vector2D> coins);
+	Vector2D NearestCoin(vector<Vector2D> *coins, Vector2D pos);
+
 	// Per pintar
 	vector<SDL_Rect> fronteraPintada;
 	float heuristic(Vector2D from, Vector2D to);
+
 	Vector2D cell2pix(Vector2D cell)
 	{
 		int offset = CELL_SIZE / 2;
 		return Vector2D(cell.x*CELL_SIZE + offset, cell.y*CELL_SIZE + offset);
 	}
 
+	Vector2D pix2cell(Vector2D pix)
+	{
+		return Vector2D((float)((int)pix.x / CELL_SIZE), (float)((int)pix.y / CELL_SIZE));
+	}
 
 	vector<int> totalNodes;
 	int minimNodes = 9999;

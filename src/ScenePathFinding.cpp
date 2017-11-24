@@ -29,13 +29,15 @@ ScenePathFinding::ScenePathFinding()
 	coinPosition = Vector2D(-1,-1);
 	while ((!isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, rand_cell)<3)) 
 		coinPosition = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
-	//coinPosition = Vector2D(2, 10);
 	
 	// PathFollowing next Target
 	currentTarget = Vector2D(0, 0);
 	currentTargetIndex = -1;
 
 
+	for (int i = 0; i < 2; i++) {
+		coinsGroup.push_back(Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y)));
+	}
 
 }
 
@@ -69,21 +71,7 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 		if (event->button.button == SDL_BUTTON_LEFT)
 		{
 			Vector2D cell = pix2cell(Vector2D((float)(event->button.x), (float)(event->button.y)));
-			if (isValidCell(cell))
-			{
-				cout << cell.x << " " << cell.y << "    ";
-				/*if (path.points.size() > 0)
-					if (path.points[path.points.size() - 1] == cell2pix(cell))
-						break;
 
-				path.points.push_back(cell2pix(cell));*/
-				//customTimer();
-				//Per canviar de algoritme, descomentar el que es vol usar i comentar la resta.
-					//path = agents[0]->PathFinding_BFS(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
-					//path = agents[0]->PathFinding_Dijkstra(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
-					//path = agents[0]->PathFinding_A_Estrella(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
-					//path = agents[0]->PathFinding_Greedy_BFG(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
-			}
 		}
 		if (event->button.button == SDL_BUTTON_RIGHT)
 		{
@@ -111,7 +99,15 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 					path.points.clear();
 					currentTargetIndex = -1;
 					agents[0]->setVelocity(Vector2D(0,0));
+
+					if (grupCoin_bool) {
+						for (int i = 0; i < 4; i++) {
+							coinsGroup.push_back(Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y)));
+						}
+					}
+
 					// if we have arrived to the coin, replace it ina random cell!
+
 					if (pix2cell(agents[0]->getPosition()) == coinPosition)
 					{
 						coinPosition = Vector2D(-1, -1);
@@ -121,8 +117,6 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 
 						// Buida el vector de pintar la frontera (reset)
 						agents[0]->fronteraPintada.clear();
-
-						//path = agents[0]->PathFinding_BFS(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 						
 					}
 				}
@@ -130,6 +124,9 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 				{
 					Vector2D steering_force = agents[0]->Behavior()->Arrive(agents[0], currentTarget, path.ARRIVAL_DISTANCE, dtime);
 					agents[0]->update(steering_force, dtime, event);
+					coinsGroup.clear();
+
+
 				}
 				return;
 			}
@@ -138,15 +135,24 @@ void ScenePathFinding::update(float dtime, SDL_Event *event)
 
 		currentTarget = path.points[currentTargetIndex];
 		Vector2D steering_force = agents[0]->Behavior()->Seek(agents[0], currentTarget, dtime);
+		if ((agents[0]->getPosition() - currentTarget).Length() > 1000) {
+			steering_force.x = -steering_force.x;
+		}
 		agents[0]->update(steering_force, dtime, event);
 	} 
 	else
 	{
+		// Descomentar l'algoritme desitjat
+
 		agents[0]->update(Vector2D(0,0), dtime, event);
-		path = agents[0]->PathFinding_BFS(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+
+		//path = agents[0]->PathFinding_BFS(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 		//path = agents[0]->PathFinding_Dijkstra(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 		//path = agents[0]->PathFinding_A_Estrella(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
 		//path = agents[0]->PathFinding_Greedy_BFG(terrainGraph, pix2cell(agents[0]->getPosition()), coinPosition);
+		grupCoin_bool = true;
+		if (grupCoin_bool)
+			path = agents[0]->PathFinding_GroupCoins_A_Star(terrainGraph, pix2cell(agents[0]->getPosition()), coinsGroup);
 	}
 }
 
@@ -605,46 +611,3 @@ bool ScenePathFinding::isValidCell(Vector2D cell)
 		return false;
 	return !(terrain[(unsigned int)cell.x][(unsigned int)cell.y] == 0);
 }
-
-void ScenePathFinding::customTimer()
-{
-	clock_t startTime = clock(); //Start timer
-	double secondsPassed;
-	double secondsToDelay = 5;
-	std::cout << "Time to delay: " << secondsToDelay << std::endl;
-	bool flag = true;
-	while (flag)
-	{
-		secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
-		if (secondsPassed >= secondsToDelay)
-		{
-			std::cout << secondsPassed << " seconds have passed" << std::endl;
-			flag = false;
-
-		}
-	}
-}
-
-/*
-
-Crear graph:
-Recorrer el terreny sencer (Dos for) i anar comprovant si la casella == 1. Si ho es, el que farem es
-Indicar la seva posició com a node origen a la class Aresta. Seguit comprovar els seus 4 veïns i si
-depenent si són == 1 o == o, s'afageix una aresta amb el node comprovat. Una vegada comprovats els
-4 veïns, seguim recorrent l'array.
-
-No passa res si hi ha arestes diferents de doble sentit, es "útil".
-D'aquesta manera cream un graph que conté cada cel·la de terren, que no sigui == 0.
-
-*/
-
-/*
-
-Crearem la classe Graph, i també la classe aresta
-Aresta contendra un Vector amb el node origen i node final de cada aresta, també tenir en compte el pes
-del camí. Despres els pertinents setters i getters.
-
-Graph pot ser inclús un Struct, que contengui una array o vector d'arestes. Tot i que inclús podríem
-no crear ni la classe graph i sobreviure amb un vector<Aresta> i que guardi totes
-
-*/

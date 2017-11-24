@@ -44,8 +44,9 @@ private:
 
 	void drawGraph();
 	bool draw_graph;
-	void customTimer();
 	std::vector<SDL_Rect> sand_rects;
 	std::vector<SDL_Rect> rocks_rects;
+	vector<Vector2D> coinsGroup;
+	bool grupCoin_bool = false;
 };
 

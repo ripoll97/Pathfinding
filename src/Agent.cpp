@@ -131,7 +131,8 @@ void Agent::draw()
 	else
 	{
 		// Pintar la frontera
-		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 100, 149, 237, 255);
+		SDL_SetRenderDrawBlendMode(TheApp::Instance()->getRenderer(), SDL_BLENDMODE_BLEND);
+		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 100, 149, 237, 120);
 		for (int i = 0; i < fronteraPintada.size(); i++) {
 			SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &fronteraPintada[i]);
 		}
@@ -173,8 +174,6 @@ Path Agent::PathFinding_BFS(Graph graph, Vector2D inicialNode, Vector2D endNode)
 	unordered_map<Vector2D, Vector2D> came_from;
 	Vector2D current;
 
-	//cout << inicialNode.x << " " << inicialNode.y;
-
 	vector<Connection> neighbors;
 
 	int totalExplorationNodes = 0;
@@ -184,7 +183,6 @@ Path Agent::PathFinding_BFS(Graph graph, Vector2D inicialNode, Vector2D endNode)
 		current = frontier.front();
 		neighbors = graph.GetConnections(current);
 		if (current == endNode) {
-			//cout << "     FOUND      ";
 			break;
 		}
 
@@ -240,7 +238,6 @@ Path Agent::PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D end
 	Path tempPath;
 
 	priority_queue<pair<Vector2D, int>, vector<pair<Vector2D, int>>, CompareDist> frontier;
-	//frontier.emplace(make_pair(inicialNode, 0));
 	frontier.push(make_pair(inicialNode, 0));
 	unordered_map<Vector2D, Vector2D> cameFrom;
 	unordered_map<Vector2D, int> costSoFar;
@@ -264,7 +261,6 @@ Path Agent::PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D end
 
 		while (!neighbours.empty()) {
 			newCost = costSoFar[current] + neighbours.back().GetCost();
-			//SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
 
 			if (costSoFar.count(neighbours.back().GetToNode()) == 0 || newCost < costSoFar[neighbours.back().GetToNode()]) {
 				costSoFar[neighbours.back().GetToNode()] = newCost;
@@ -280,7 +276,6 @@ Path Agent::PathFinding_Dijkstra(Graph graph, Vector2D inicialNode, Vector2D end
 				currentNodes++;
 			}
 			else
-				//fronteraPintada.push_back(actualCel);
 				neighbours.pop_back();
 		}
 		frontier.pop();
@@ -343,7 +338,6 @@ Path Agent::PathFinding_A_Estrella(Graph graph, Vector2D inicialNode, Vector2D e
 
 		while (!neighbours.empty()) {
 			newCost = costSoFar[current] + neighbours.back().GetCost();
-			//SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
 
 			if (costSoFar.count(neighbours.back().GetToNode()) == 0 || newCost < costSoFar[neighbours.back().GetToNode()]) {
 				costSoFar[neighbours.back().GetToNode()] = newCost;
@@ -360,7 +354,6 @@ Path Agent::PathFinding_A_Estrella(Graph graph, Vector2D inicialNode, Vector2D e
 				currentNodes++;
 			}
 			else
-				//fronteraPintada.push_back(actualCel);
 				neighbours.pop_back();
 		}
 		frontier.pop();
@@ -402,7 +395,6 @@ Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D e
 	Path tempPath;
 
 	priority_queue<pair<Vector2D, int>, vector<pair<Vector2D, int>>, CompareDist> frontier;
-	//frontier.emplace(make_pair(inicialNode, 0));
 	frontier.push(make_pair(inicialNode, 0));
 	unordered_map<Vector2D, Vector2D> cameFrom;
 	Vector2D current;
@@ -425,7 +417,6 @@ Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D e
 			break;
 
 		while (!neighbours.empty()) {
-			//SDL_Rect actualCel = { cell2pix(neighbours.back().GetToNode()).x - (CELL_SIZE / 2), cell2pix(neighbours.back().GetToNode()).y - (CELL_SIZE / 2), 32, 32 };
 
 			if (cameFrom.count(neighbours.back().GetToNode()) == 0) {
 				priority = heuristic(neighbours.back().GetToNode(), endNode);
@@ -441,7 +432,6 @@ Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D e
 				currentNodes++;
 			}
 			else
-				//fronteraPintada.push_back(actualCel);
 				neighbours.pop_back();
 			
 		}
@@ -476,8 +466,34 @@ Path Agent::PathFinding_Greedy_BFG(Graph graph, Vector2D inicialNode, Vector2D e
 	return tempPath;
 }
 
+Path Agent::PathFinding_GroupCoins_A_Star(Graph graph, Vector2D inicialNode, vector<Vector2D> coins) {
+	vector<Vector2D> coinsVector = coins;
+	Vector2D nearestCoin;
+	Path totalPath;
+	Vector2D actualPos = inicialNode;
+	for (int i = 0; i < coins.size(); i++) {
+		nearestCoin = NearestCoin(&coinsVector, actualPos);	
+		Path tempPath = PathFinding_A_Estrella(graph, actualPos, nearestCoin);
+		totalPath.points.insert(totalPath.points.end(), tempPath.points.begin(), tempPath.points.end());
+		actualPos = pix2cell(totalPath.points.back());
+	}
+	return totalPath;
+}
+
+Vector2D Agent::NearestCoin(vector<Vector2D> *coins, Vector2D pos) {
+	Vector2D nearest = coins->at(0);
+	int position = 0;
+	for (int i = 0; i < coins->size(); i++) {
+		if (heuristic(pos, coins->at(i)) < heuristic(pos, nearest)) {
+			nearest = coins->at(i);
+			position = i;
+		}
+	}
+	coins->erase(coins->begin() + position);
+	return nearest;
+}
+
 float Agent::heuristic(Vector2D from, Vector2D to) {
-	//float dist = sqrt(pow(abs(to.x - from.x),2) + pow(abs(to.y - from.y),2));
 	float dist2 = abs(to.x - from.x) + abs(to.y - from.y);
 	return dist2;
 }
